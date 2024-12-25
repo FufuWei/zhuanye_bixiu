@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+string a,b;
+int dist(int i,int j)
+//返回a中第i个字符 b中第j个字符的acsii值之差
+{
+	return abs(a[i-1]-b[j-1]); 
+} 
+int main()
+{
+	cin>>a>>b;//输入两个字符串
+	int k;cin>>k;
+	int len1=a.size();
+	int len2=b.size();
+	int dp[len1+1][len2+1];//下标从1开始 1表示a/b中的第一个字符
+	
+	for(int i=0;i<=len2;++i)//有一个字符串是空的 
+		dp[0][i]=k*i;
+	for(int i=0;i<=len1;++i)
+		dp[i][0]=k*i;
+	
+	for(int i=1;i<=len1;++i)
+		for(int j=1;j<=len2;++j)
+			dp[i][j]=min(dp[i-1][j-1]+dist(i,j),min(dp[i-1][j]+k,dp[i][j-1]+k));
+			//递归式
+	cout<<dp[len1][len2]<<endl;
+	return 0; 
+ } 

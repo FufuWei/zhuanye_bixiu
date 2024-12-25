@@ -1,0 +1,50 @@
+#include <iostream>
+#include <algorithm>
+#include <cmath>
+#include<iomanip>
+using namespace std;
+
+const int MAXN = 30000;
+class Point 
+{
+public:
+	double x, y;
+};
+Point* point = new Point[MAXN];
+
+bool cmp(Point a, Point b) { 
+	return a.x < b.x;
+}
+
+double distance(Point a, Point b) { 
+	return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+}
+
+double min1(int left, int right) {
+	if (left == right) return 1e20;
+	if (left + 1 == right) return distance(point[left], point[right]); // 只有两个点，直接计算
+	int mid = (left + right)/2;
+	double d = min(min1(left, mid), min1(mid + 1, right)); 
+	double mid_x = point[mid].x;
+	int cnt = 0;
+	for (int i = left; i <= right; i++) { 
+		if (fabs(point[i].x - mid_x) <= d) { 
+			cnt++;
+			for (int j = i + 1; j <= right && j <= i + 7; j++) {
+				d = min(d, distance(point[i], point[j]));
+			}
+		}
+	}
+	return d;
+}
+
+int main() {
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> point[i].x >> point[i].y;
+	}
+	sort(point, point + n, cmp);
+	cout << fixed << setprecision(2) << min1(0, n - 1);
+	return 0;
+}
